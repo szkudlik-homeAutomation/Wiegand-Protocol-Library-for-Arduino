@@ -8,23 +8,23 @@
     #define INTERRUPT_ATTR
 #endif
 
-volatile unsigned long WIEGAND::_cardTempHigh=0;
-volatile unsigned long WIEGAND::_cardTemp=0;
-volatile unsigned long WIEGAND::_lastWiegand=0;
-unsigned long WIEGAND::_code=0;
-volatile int WIEGAND::_bitCount=0;	
-int WIEGAND::_wiegandType=0;
+volatile uint32_t WIEGAND::_cardTempHigh=0;
+volatile uint32_t WIEGAND::_cardTemp=0;
+volatile uint32_t WIEGAND::_lastWiegand=0;
+uint32_t WIEGAND::_code=0;
+volatile uint8_t WIEGAND::_bitCount=0;
+uint8_t WIEGAND::_wiegandType=0;
 
 WIEGAND::WIEGAND()
 {
 }
 
-unsigned long WIEGAND::getCode()
+uint32_t WIEGAND::getCode()
 {
 	return _code;
 }
 
-int WIEGAND::getWiegandType()
+uint8_t WIEGAND::getWiegandType()
 {
 	return _wiegandType;
 }
@@ -43,7 +43,7 @@ void WIEGAND::begin()
 	begin(2,3);
 }
 
-void WIEGAND::begin(int pinD0, int pinD1)
+void WIEGAND::begin(uint8_t pinD0, uint8_t pinD1)
 {
 	_lastWiegand = 0;
 	_cardTempHigh = 0;
@@ -92,7 +92,7 @@ INTERRUPT_ATTR void WIEGAND::ReadD1()
 	_lastWiegand = millis();	// Keep track of last wiegand bit received
 }
 
-unsigned long WIEGAND::GetCardId (volatile unsigned long *codehigh, volatile unsigned long *codelow, char bitlength)
+uint32_t WIEGAND::GetCardId (volatile uint32_t *codehigh, volatile uint32_t *codelow, char bitlength)
 {
 	if (bitlength==26)								// EM tag
 		return (*codelow & 0x1FFFFFE) >>1;
@@ -130,8 +130,8 @@ char translateEnterEscapeKeyPress(char originalKeyPress) {
 
 bool WIEGAND::DoWiegandConversion ()
 {
-	unsigned long cardID;
-	unsigned long sysTick = millis();
+	uint32_t cardID;
+	uint32_t sysTick = millis();
 	
 	if ((sysTick - _lastWiegand) > 25)								// if no more signal coming through after 25ms
 	{
